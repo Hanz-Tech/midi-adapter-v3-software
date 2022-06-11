@@ -1,33 +1,59 @@
+/*!
+ *  @file       po_settings.cpp
+ *  Project     Pocket Operator MIDI Adapter
+ *  @brief      Pocket Operator MIDI Adapter
+ *  @author     Hanz Tech Inc
+ *  @date       2022/03/06
+ *  @license    MIT - Copyright (c) 2022 Hanz Tech Inc
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 #ifndef PO_SETTINGS_H
 #define PO_SETTINGS_H
 
 //Teensy GPIO mapping to PO button
-#define PO_BUTTON_1 5
-#define PO_BUTTON_2 6
-#define PO_BUTTON_3 19
-#define PO_BUTTON_4 18
-#define PO_BUTTON_5 10
-#define PO_BUTTON_6 11
-#define PO_BUTTON_7 14
-#define PO_BUTTON_8 15
-#define PO_BUTTON_9 25
-#define PO_BUTTON_10 12
-#define PO_BUTTON_11 39
-#define PO_BUTTON_12 38
-#define PO_BUTTON_13 30
-#define PO_BUTTON_14 32
-#define PO_BUTTON_15 34
-#define PO_BUTTON_16 33
-#define PO_BUTTON_SOUND 2
-#define PO_BUTTON_PATTERN 3
-#define PO_BUTTON_WRITE 35
-#define PO_BUTTON_PLAY 36
-#define PO_BUTTON_FX 16
-#define PO_BUTTON_BPM 23
-#define PO_BUTTON_SPECIAL 17
-#define PO_POT_A 22
-#define PO_POT_B 21
-#define CLOCKSYNCPIN A6
+#define PO_BUTTON_1 16
+#define PO_BUTTON_2 17
+#define PO_BUTTON_3 27
+#define PO_BUTTON_4 30
+#define PO_BUTTON_5 18
+#define PO_BUTTON_6 19
+#define PO_BUTTON_7 24
+#define PO_BUTTON_8 25
+#define PO_BUTTON_9 22
+#define PO_BUTTON_10 21
+#define PO_BUTTON_11 20
+#define PO_BUTTON_12 11
+#define PO_BUTTON_13 23
+#define PO_BUTTON_14 5
+#define PO_BUTTON_15 6
+#define PO_BUTTON_16 10
+#define PO_BUTTON_SOUND 39
+#define PO_BUTTON_PATTERN 40
+#define PO_BUTTON_WRITE 9
+#define PO_BUTTON_PLAY 12
+#define PO_BUTTON_FX 26
+#define PO_BUTTON_BPM 41
+#define PO_BUTTON_SPECIAL 31
+#define CLOCKSYNCPIN 38
+#define ESP32_ENABLE 37
 
 //Midi channel and other options
 #define PO_MIDI_CHANNEL 1 //MIDI channel to control the PO
@@ -47,136 +73,5 @@
 
 #define KNOB_DELAY 15
 
-//Midi Notes, these are used to trigger button 1-16 and sound,pattern.bpm....
-uint8_t midi_note[24] = { //These are midi notes value
-  0,
-  68,
-  69,
-  70,
-  71,
-  72,
-  73,
-  74,
-  75,
-  60,
-  61,
-  62,
-  63,
-  64,
-  65,
-  66,
-  67,
-  76,
-  77,
-  78,
-  79,
-  80,
-  81,
-  82,
-};
-
-const char *midi_note_str[24] = {
-  "0",
-  "midi_note_1",
-  "midi_note_2",
-  "midi_note_3",
-  "midi_note_4",
-  "midi_note_5",
-  "midi_note_6",
-  "midi_note_7",
-  "midi_note_8",
-  "midi_note_9",
-  "midi_note_10",
-  "midi_note_11",
-  "midi_note_12",
-  "midi_note_13",
-  "midi_note_14",
-  "midi_note_15",
-  "midi_note_16",
-  "midi_note_sound",
-  "midi_note_pattern",
-  "midi_note_bpm",
-  "midi_note_special",
-  "midi_note_fx",
-  "midi_note_play",
-  "midi_note_write",
-};
-
-
-uint8_t midi_cc_knob[17] = {
-  0,
-  1,  //Synth : vco1 shape
-  2,  //Synth : vco2 shape
-  3,  //Synth : Detune vco2
-  4,  //Synth : vco 2 octave
-  5,  //Synth : LFO Freq
-  6,  //Synth : LFO Mod
-  7,  //Synth : Filter Freq
-  8,  //Synth : Filter Res
-  9,   //PO : mode, mode 0 : normal , mode 1 : fx, mode 2 : record , mode 3 : write   //Synth : Attack
-  10,  //PO : sound 1-16    //Synth : Decay
-  11,  //PO : pattern 1-16  //Synth : Sustain
-  12,  //PO : volume 1-16   //Synth : Released
-  13,  //Synth : Delay time
-  14,  //Synth : Delay feedback
-  15,  //Synth : Mix
-  16   //Synth : Volume
-};
-
-const char *midi_cc_knob_str[17] = {
-  "0",
-  "midi_cc_knob_1",
-  "midi_cc_knob_2",
-  "midi_cc_knob_3",
-  "midi_cc_knob_4",
-  "midi_cc_knob_5",
-  "midi_cc_knob_6",
-  "midi_cc_knob_7",
-  "midi_cc_knob_8",
-  "midi_cc_knob_9",
-  "midi_cc_knob_10",
-  "midi_cc_knob_11",
-  "midi_cc_knob_12",
-  "midi_cc_knob_13",
-  "midi_cc_knob_14",
-  "midi_cc_knob_15",
-  "midi_cc_knob_16"
-};
-
-uint8_t note_map[23][2] = {
-  {midi_note[1],PO_BUTTON_1},
-  {midi_note[2],PO_BUTTON_2},
-  {midi_note[3],PO_BUTTON_3},
-  {midi_note[4],PO_BUTTON_4},
-  {midi_note[5],PO_BUTTON_5},
-  {midi_note[6],PO_BUTTON_6},
-  {midi_note[7],PO_BUTTON_7},
-  {midi_note[8],PO_BUTTON_8},
-  {midi_note[9],PO_BUTTON_9},
-  {midi_note[10],PO_BUTTON_10},
-  {midi_note[11],PO_BUTTON_11},
-  {midi_note[12],PO_BUTTON_12},
-  {midi_note[13],PO_BUTTON_13},
-  {midi_note[14],PO_BUTTON_14},
-  {midi_note[15],PO_BUTTON_15},
-  {midi_note[16],PO_BUTTON_16},
-  {midi_note[17],PO_BUTTON_SOUND},
-  {midi_note[18],PO_BUTTON_PATTERN},
-  {midi_note[19],PO_BUTTON_BPM},
-  {midi_note[20],PO_BUTTON_SPECIAL},
-  {midi_note[21],PO_BUTTON_FX},
-  {midi_note[22],PO_BUTTON_PLAY},
-  {midi_note[23],PO_BUTTON_WRITE},
-};
-
-uint8_t transport_note_map[7][2] ={
-  {midi_note[9],PO_BUTTON_SOUND},
-  {midi_note[10],PO_BUTTON_PATTERN},
-  {midi_note[11],PO_BUTTON_BPM},
-  {midi_note[1],PO_BUTTON_SPECIAL},
-  {midi_note[2],PO_BUTTON_FX},
-  {midi_note[3],PO_BUTTON_PLAY},
-  {midi_note[4],PO_BUTTON_WRITE}
-};
 
 #endif
