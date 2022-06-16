@@ -2,9 +2,11 @@
 
 Buy it Here 
 
-<a href="https://www.tindie.com/stores/hanztech/?ref=offsite_badges&utm_source=sellers_bobthesheep&utm_medium=badges&utm_campaign=badge_medium"><img src="https://d2ss6ovg47m0r5.cloudfront.net/badges/tindie-mediums.png" alt="I sell on Tindie" width="150" height="78"></a>
+<a href="https://hanztechnology.com/shop"><img src="https://hanztechnology.com/logo.svg" alt="https://hanztechnology.com/shop" width="150" height="78"></a>
 
-[Etsy](https://www.etsy.com/ca/HanzTechInc/listing/979132858/pocket-operator-midi-adapter-v2)
+OR
+
+<a href="https://www.tindie.com/stores/hanztech/?ref=offsite_badges&utm_source=sellers_bobthesheep&utm_medium=badges&utm_campaign=badge_medium"><img src="https://d2ss6ovg47m0r5.cloudfront.net/badges/tindie-mediums.png" alt="I sell on Tindie" width="150" height="78"></a>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -25,7 +27,7 @@ In this repository you will find the firmware for the pocket operator midi adapt
 
 The code will only work on a **Teensy 4.1**
 
-[![PO-MA](https://raw.githubusercontent.com/PO-MIDI-Adapter/midi-adapter-hardware/master/photos/title.jpg)](https://www.youtube.com/watch?v=iIQ18DAJAU0 "PO-MA")
+[![PO-MA](https://raw.githubusercontent.com/Hanz-Tech/midi-adapter-v3-software/master/pictures/title.png)](https://www.youtube.com/watch?v=n_peiBfl6JI "PO-MA")
 
 ## Main Features
 
