@@ -31,8 +31,8 @@
 #define CLOCK_H
 #include <Arduino.h>
 
-#define MIN_BPM 60
-#define MAX_BPM 240
+#define MIN_BPM 20
+#define MAX_BPM 300
 #define CLICK_HIGH_DURATION 6
 class Clock{
     public:

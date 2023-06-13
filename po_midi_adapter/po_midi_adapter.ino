@@ -35,7 +35,7 @@
 #include "po_control.h"
 #define LEN(arr) ((uint8_t) (sizeof (arr) / sizeof (arr)[0]))
 
-#define FIRMWARE_VERSION "3.3.0"
+#define FIRMWARE_VERSION "3.3.2"
 
 #define LED_PIN 13
 #define LED_ON_MS 15
@@ -144,7 +144,7 @@ void setup() {
   delay(1500);
 
   
-  midi_ppqn = po_control->get_midi_ppqn();
+  
   delay(10);
   myusb.begin();
   if(po_control->get_sync_out_enabled()){
@@ -153,6 +153,7 @@ void setup() {
   }
 
   po_control = new PO_Control();
+  midi_ppqn = po_control->get_midi_ppqn();
   Serial.println("Pocket Operator MIDI Adapter");
   Serial.println("Firmware Version");
   Serial.println(FIRMWARE_VERSION);

@@ -70,7 +70,7 @@ void Clock::sendBPM(unsigned long curTime) {
       // go low if we need to stop clicking
       _isLow = (curTime >= _lastTrig + CLICK_HIGH_DURATION);
     }
-    analogWrite(_pin_sync_out, _isLow ? 0 : 255);
+    digitalWrite(_pin_sync_out, _isLow ? LOW : HIGH);
   }
   else{
     digitalWrite(_pin_sync_out, LOW);
