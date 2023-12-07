@@ -1,5 +1,5 @@
 /*!
- *  @file       sd_load.h
+ *  @file       storage.h
  *  Project     Pocket Operator MIDI Adapter
  *  @brief      Pocket Operator MIDI Adapter
  *  @author     Hanz Tech Inc
@@ -25,15 +25,17 @@
  * THE SOFTWARE.
  */
 
-#ifndef SD_LOAD_H
-#define SD_LOAD_H
+#ifndef STORAGE_H
+#define STORAGE_H
 #include <SD.h>
 #include <SPI.h>
 #include <Arduino.h>
 #include <SDConfigFile.h>
+#include <EEPROM.h>
+#include <ArduinoJson.h>
 #include "po_settings.h"
 #define LEN(arr) ((uint8_t) (sizeof (arr) / sizeof (arr)[0]))
-class SD_Load{
+class Storage{
     private:
       int _po_midi_channel = 1;
       int _synth_midi_channel = 2;
@@ -247,7 +249,10 @@ class SD_Load{
         "midi_note_loop_clear"
       };
       bool loadSDConfig();
-
+      bool loadEepromConfig();
+      bool readEeprom(DynamicJsonDocument& po_config);
+      bool writeEeprom(DynamicJsonDocument& json);
+      bool checkforUpdate();
       void printArray( uint8_t a[][ 2 ] ) {
         // loop through array's rows
         for ( int i = 0; i < 16; ++i ) {
@@ -258,9 +263,12 @@ class SD_Load{
         } 
       // end outer for
       } 
-      
+      DynamicJsonDocument _cmdStats;
+      DynamicJsonDocument _serial_json;
+      DynamicJsonDocument _cur_po_config;
+      DynamicJsonDocument _eepromAddresses;
     public:
-      SD_Load();
+      Storage();
       int get_po_midi_channel(){ return _po_midi_channel; }
       int get_synth_midi_channel(){ return _synth_midi_channel; }
       int get_disable_transport(){ return _disable_transport; }

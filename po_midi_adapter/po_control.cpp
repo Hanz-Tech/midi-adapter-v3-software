@@ -44,7 +44,7 @@ void printArray( uint8_t a[][ 2 ] ) {
 } 
 
 PO_Control::PO_Control(){
-  _config = new SD_Load();
+  _config = new Storage();
   _po_midi_channel = _config->get_po_midi_channel();
   _disable_transport = _config->get_disable_transport(); //1 == disable transport, 0 == enabled transport
   _po_cc_control = _config->get_po_cc_control(); //0 == disable , 1 ==enable
