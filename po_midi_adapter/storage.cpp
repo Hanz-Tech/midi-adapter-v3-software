@@ -38,23 +38,27 @@ static bool _isValidMidiValue(int value) {
   return (value >= 0 && value <= 127) || value == 255;
 }
 
-static int led = 13;
 
-Storage::Storage() : _cmdStats(64), _serial_json(2048), _cur_po_config(2048), _eepromAddresses(2048) {
+
+static DynamicJsonDocument _cmdStats(64);
+static DynamicJsonDocument _cur_po_config(2048);
+static DynamicJsonDocument _eepromAddresses(2048);
+
+Storage::Storage() {
   if (SD.begin(chipSelect)){
     Serial.println("card init");
     if(this->loadSDConfig()){
-      digitalWrite(13, HIGH);   // set the LED on
+      digitalWrite(LED_PIN, HIGH);   // set the LED on
       delay(100);                  // wait for a second
-      digitalWrite(13, LOW);    // set the LED off
+      digitalWrite(LED_PIN, LOW);    // set the LED off
       delay(100);
-      digitalWrite(13, HIGH);   // set the LED on
+      digitalWrite(LED_PIN, HIGH);   // set the LED on
       delay(100);                  // wait for a second
-      digitalWrite(13, LOW);    // set the LED off
+      digitalWrite(LED_PIN, LOW);    // set the LED off
       delay(100);
-      digitalWrite(13, HIGH);   // set the LED on
+      digitalWrite(LED_PIN, HIGH);   // set the LED on
       delay(100);                  // wait for a second
-      digitalWrite(13, LOW);    // set the LED off
+      digitalWrite(LED_PIN, LOW);    // set the LED off
     }
   } else {
       _cur_po_config["midi_note_1"] = 68;
@@ -112,6 +116,7 @@ Storage::Storage() : _cmdStats(64), _serial_json(2048), _cur_po_config(2048), _e
       _cur_po_config["looper_quantized"] = 1;
       _cur_po_config["ble_midi_enabled"] = 1;
       _cur_po_config["midi_cc_knob_9"] = 67;
+      _cur_po_config["version"]= FIRMWARE_VERSION;
       _eepromAddresses["midi_note_1"] = 1;
       _eepromAddresses["midi_note_2"] = 2;
       _eepromAddresses["midi_note_3"] = 3;
@@ -169,17 +174,17 @@ Storage::Storage() : _cmdStats(64), _serial_json(2048), _cur_po_config(2048), _e
       _eepromAddresses["midi_cc_knob_9"] = 57;
 
     this->loadEepromConfig();
-    digitalWrite(13, HIGH);   // set the LED on
+    digitalWrite(LED_PIN, HIGH);   // set the LED on
     delay(100);                  // wait for a second
-    digitalWrite(13, LOW);    // set the LED off
+    digitalWrite(LED_PIN, LOW);    // set the LED off
     delay(100);
-    digitalWrite(13, HIGH);   // set the LED on
+    digitalWrite(LED_PIN, HIGH);   // set the LED on
     delay(100);                  // wait for a second
-    digitalWrite(13, LOW);    // set the LED off
+    digitalWrite(LED_PIN, LOW);    // set the LED off
     delay(100);
-    digitalWrite(13, HIGH);   // set the LED on
+    digitalWrite(LED_PIN, HIGH);   // set the LED on
     delay(100);                  // wait for a second
-    digitalWrite(13, LOW);    // set the LED off
+    digitalWrite(LED_PIN, LOW);    // set the LED off
   }
 }
 
@@ -301,13 +306,13 @@ bool Storage::readEeprom(DynamicJsonDocument& po_config){
     for (JsonPair kv : _eepromAddresses.as<JsonObject>()) {
       po_config[kv.key().c_str()] = EEPROM.read(kv.value().as<int>());
     }
-    digitalWrite(led, HIGH);   // turn the LED on (HIGH is the voltage level)
+    digitalWrite(LED_PIN, HIGH);   // turn the LED on (HIGH is the voltage level)
     delay(200);               // wait for a second
-    digitalWrite(led, LOW);    // turn the LED off by making the voltage LOW
+    digitalWrite(LED_PIN, LOW);    // turn the LED off by making the voltage LOW
     delay(200);
-    digitalWrite(led, HIGH);   // turn the LED on (HIGH is the voltage level)
+    digitalWrite(LED_PIN, HIGH);   // turn the LED on (HIGH is the voltage level)
     delay(200);               // wait for a second
-    digitalWrite(led, LOW);    // turn the LED off by making the voltage LOW
+    digitalWrite(LED_PIN, LOW);    // turn the LED off by making the voltage LOW
     delay(200);
     return true;
 }
@@ -318,13 +323,13 @@ bool Storage::writeEeprom(DynamicJsonDocument& json){
       int address = _eepromAddresses[kv.key()];
       EEPROM.write(address, kv.value().as<int>());
     }
-    digitalWrite(led, HIGH);   // turn the LED on (HIGH is the voltage level)
+    digitalWrite(LED_PIN, HIGH);   // turn the LED on (HIGH is the voltage level)
     delay(200);               // wait for a second
-    digitalWrite(led, LOW);    // turn the LED off by making the voltage LOW
+    digitalWrite(LED_PIN, LOW);    // turn the LED off by making the voltage LOW
     delay(200);
-    digitalWrite(led, HIGH);   // turn the LED on (HIGH is the voltage level)
+    digitalWrite(LED_PIN, HIGH);   // turn the LED on (HIGH is the voltage level)
     delay(200);               // wait for a second
-    digitalWrite(led, LOW);    // turn the LED off by making the voltage LOW
+    digitalWrite(LED_PIN, LOW);    // turn the LED off by making the voltage LOW
     delay(200);
     _cmdStats["status"] = "Success";
     _cmdStats["command"] = "SAVEALL";
@@ -335,15 +340,17 @@ bool Storage::writeEeprom(DynamicJsonDocument& json){
 }
 
 bool Storage::checkforUpdate() {
+    DynamicJsonDocument _serial_json(2048);
     DeserializationError error = deserializeJson(_serial_json, Serial);
   if (error) {
         _cmdStats["status"] = "deserializeJson() failed: ";
-        _cmdStats["command"] = error.c_str();
+        _cmdStats["error"] = error.c_str();
         serializeJson(_cmdStats, Serial);
   } else {
-    if(_serial_json["command"] == "READALL"){
+    String command = _serial_json["command"];
+    if(command.equals("READALL")){
       serializeJson(_cur_po_config, Serial);
-    } else if (_serial_json["command"] == "SAVEALL") {
+    } else if (command.equals("SAVEALL")) {
       this->writeEeprom(_serial_json);
     } else {    
       _cmdStats["status"] = "Unknown command";
@@ -352,4 +359,3 @@ bool Storage::checkforUpdate() {
     }
   }
 }
-

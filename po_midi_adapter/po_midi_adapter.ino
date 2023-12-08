@@ -33,12 +33,11 @@
 #include "clock.h"
 #include <Arduino.h>
 #include "po_control.h"
+#include "global.h"
 #define LEN(arr) ((uint8_t) (sizeof (arr) / sizeof (arr)[0]))
 
-#define FIRMWARE_VERSION "3.3.2"
 
-#define LED_PIN 13
-#define LED_ON_MS 15
+
 
 // Create the Serial MIDI portsm
 MIDI_CREATE_INSTANCE(HardwareSerial, Serial3, MIDI1);
@@ -154,9 +153,9 @@ void setup() {
 
   po_control = new PO_Control();
   midi_ppqn = po_control->get_midi_ppqn();
-  Serial.println("Pocket Operator MIDI Adapter");
-  Serial.println("Firmware Version");
-  Serial.println(FIRMWARE_VERSION);
+  // Serial.println("Pocket Operator MIDI Adapter");
+  // Serial.println("Firmware Version");
+  // Serial.println(FIRMWARE_VERSION);
 
   po_control->powerOnEsp32();
   delay(3000); //wait for esp32 to boot
@@ -171,6 +170,11 @@ void loop() {
   if(po_control->get_sync_out_enabled()){
     clk->sendBPM(millis());
   }
+
+  if (Serial.available() > 0) {
+    po_control->checkForConfigUpdate();
+  }
+
   // Next read messages arriving from the (up to) 10 USB devices plugged into the USB Host port
   for (int port=0; port < 1; port++) {
     if (midilist[port]->read()) {

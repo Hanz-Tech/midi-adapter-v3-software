@@ -5,7 +5,7 @@
 BluetoothMIDI_Interface MIDI_BLE;
 HardwareSerialMIDI_Interface MIDI_SERIAL = Serial;
 
-#define FIRMWARE_VERSION "2.3.5"
+#define FIRMWARE_VERSION "3.3.2"
 
 BidirectionalMIDI_Pipe mpipe;
 

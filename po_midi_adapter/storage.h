@@ -34,6 +34,7 @@
 #include <EEPROM.h>
 #include <ArduinoJson.h>
 #include "po_settings.h"
+#include "global.h"
 #define LEN(arr) ((uint8_t) (sizeof (arr) / sizeof (arr)[0]))
 class Storage{
     private:
@@ -252,7 +253,6 @@ class Storage{
       bool loadEepromConfig();
       bool readEeprom(DynamicJsonDocument& po_config);
       bool writeEeprom(DynamicJsonDocument& json);
-      bool checkforUpdate();
       void printArray( uint8_t a[][ 2 ] ) {
         // loop through array's rows
         for ( int i = 0; i < 16; ++i ) {
@@ -263,10 +263,6 @@ class Storage{
         } 
       // end outer for
       } 
-      DynamicJsonDocument _cmdStats;
-      DynamicJsonDocument _serial_json;
-      DynamicJsonDocument _cur_po_config;
-      DynamicJsonDocument _eepromAddresses;
     public:
       Storage();
       int get_po_midi_channel(){ return _po_midi_channel; }
@@ -316,6 +312,8 @@ class Storage{
           midi_cc_knob[i] = _midi_cc_knob[i];
         }
       }
+      bool checkforUpdate();
+
 };
 
 #endif

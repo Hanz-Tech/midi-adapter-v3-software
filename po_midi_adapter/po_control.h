@@ -110,6 +110,7 @@ class PO_Control{
       void stop_looper();
       void clear_looper();
       void run_looper();
+      void checkForConfigUpdate();
       
 };
 

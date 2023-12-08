@@ -370,3 +370,8 @@ void PO_Control::execute(uint8_t type, uint8_t channel, uint8_t data1, uint8_t d
     }
   }
 }
+
+void PO_Control::checkForConfigUpdate(){
+  _config->checkforUpdate();
+
+}
