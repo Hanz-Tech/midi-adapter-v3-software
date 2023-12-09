@@ -287,18 +287,18 @@ bool Storage::loadEepromConfig(){
   _looper_control_note[0] = _cur_po_config["midi_note_loop_start_stop"];
   _looper_control_note[1] = _cur_po_config["midi_note_loop_clear"];
   _po_midi_channel = _cur_po_config["po_midi_channel"];
-  _disable_transport = _cur_po_config["_disable_transport"];
-  _po_cc_control = _cur_po_config["_po_cc_control"];
-  _volca_fm_velocity = _cur_po_config["_volca_fm_velocity"];
-  _volca_fm_midi_ch_1 = _cur_po_config["_volca_fm_midi_ch_1"];
-  _volca_fm_midi_ch_2 = _cur_po_config["_volca_fm_midi_ch_2"];
-  _sync_out_enabled = _cur_po_config["_sync_out_enabled"];
-  _midi_ppqn = _cur_po_config["_midi_ppqn"];
-  _looper_enabled = _cur_po_config["_looper_enabled"];
-  _looper_autoplay = _cur_po_config["_looper_autoplay"];
-  _looper_transport_control_link =_cur_po_config["_looper_transport_control_link"];
-  _looper_quantized = _cur_po_config["_looper_quantized"];
-  _esp32_enabled = _cur_po_config["_esp32_enabled"];
+  _disable_transport = _cur_po_config["disable_transport"];
+  _po_cc_control = _cur_po_config["po_cc_control"];
+  _volca_fm_velocity = _cur_po_config["volca_fm_velocity"];
+  _volca_fm_midi_ch_1 = _cur_po_config["volca_fm_midi_ch_1"];
+  _volca_fm_midi_ch_2 = _cur_po_config["volca_fm_midi_ch_2"];
+  _sync_out_enabled = _cur_po_config["sync_out_enabled"];
+  _midi_ppqn = _cur_po_config["midi_ppqn"];
+  _looper_enabled = _cur_po_config["looper_enabled"];
+  _looper_autoplay = _cur_po_config["looper_autoplay"];
+  _looper_transport_control_link =_cur_po_config["looper_transport_control_link"];
+  _looper_quantized = _cur_po_config["looper_quantized"];
+  _esp32_enabled = _cur_po_config["ble_midi_enabled"];
   return true;
 }
 
@@ -307,13 +307,13 @@ bool Storage::readEeprom(DynamicJsonDocument& po_config){
       po_config[kv.key().c_str()] = EEPROM.read(kv.value().as<int>());
     }
     digitalWrite(LED_PIN, HIGH);   // turn the LED on (HIGH is the voltage level)
-    delay(200);               // wait for a second
+    delay(100);               // wait for a second
     digitalWrite(LED_PIN, LOW);    // turn the LED off by making the voltage LOW
-    delay(200);
+    delay(100);
     digitalWrite(LED_PIN, HIGH);   // turn the LED on (HIGH is the voltage level)
-    delay(200);               // wait for a second
+    delay(100);               // wait for a second
     digitalWrite(LED_PIN, LOW);    // turn the LED off by making the voltage LOW
-    delay(200);
+    delay(100);
     return true;
 }
 
@@ -323,20 +323,20 @@ bool Storage::writeEeprom(DynamicJsonDocument& json){
       int address = _eepromAddresses[kv.key()];
       EEPROM.write(address, kv.value().as<int>());
     }
-    digitalWrite(LED_PIN, HIGH);   // turn the LED on (HIGH is the voltage level)
-    delay(200);               // wait for a second
-    digitalWrite(LED_PIN, LOW);    // turn the LED off by making the voltage LOW
-    delay(200);
-    digitalWrite(LED_PIN, HIGH);   // turn the LED on (HIGH is the voltage level)
-    delay(200);               // wait for a second
-    digitalWrite(LED_PIN, LOW);    // turn the LED off by making the voltage LOW
-    delay(200);
-    _cmdStats["status"] = "Success";
-    _cmdStats["command"] = "SAVEALL";
-    serializeJson(_cmdStats, Serial);
-    loadEepromConfig();
-    return true;
   }
+  _cmdStats["status"] = "Success";
+  _cmdStats["command"] = "SAVEALL";
+  serializeJson(_cmdStats, Serial);
+  loadEepromConfig();
+  digitalWrite(LED_PIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(100);               // wait for a second
+  digitalWrite(LED_PIN, LOW);    // turn the LED off by making the voltage LOW
+  delay(100);
+  digitalWrite(LED_PIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(100);               // wait for a second
+  digitalWrite(LED_PIN, LOW);    // turn the LED off by making the voltage LOW
+  delay(100);
+  return true;
 }
 
 bool Storage::checkforUpdate() {
