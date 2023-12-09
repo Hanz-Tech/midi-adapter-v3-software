@@ -29,7 +29,7 @@
 #ifndef PO_CONTROL_H
 #define PO_CONTROL_H
 #include <Arduino.h>
-#include "sd_load.h"
+#include "storage.h"
 #include <MIDI.h>        // access to serial (5 pin DIN) MIDI
 
 class PO_Control{
@@ -69,7 +69,7 @@ class PO_Control{
       int _esp32_enabled = 1;
       
 
-      SD_Load *_config;
+      Storage *_config;
 
       
       
@@ -110,6 +110,7 @@ class PO_Control{
       void stop_looper();
       void clear_looper();
       void run_looper();
+      void checkForConfigUpdate();
       
 };
 
