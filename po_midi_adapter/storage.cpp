@@ -346,16 +346,21 @@ bool Storage::checkforUpdate() {
         _cmdStats["status"] = "deserializeJson() failed: ";
         _cmdStats["error"] = error.c_str();
         serializeJson(_cmdStats, Serial);
+        return false;
   } else {
     String command = _serial_json["command"];
     if(command.equals("READALL")){
       serializeJson(_cur_po_config, Serial);
+      return false;
     } else if (command.equals("SAVEALL")) {
       this->writeEeprom(_serial_json);
+      return true;
     } else {    
       _cmdStats["status"] = "Unknown command";
       _cmdStats["command"] = _serial_json["command"];
       serializeJson(_cmdStats, Serial);
+      return false;
     }
   }
+  return false;
 }
