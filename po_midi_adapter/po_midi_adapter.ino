@@ -79,7 +79,18 @@ void processMidi(uint8_t type,uint8_t channel , uint8_t data1, uint8_t data2,con
 void processMidiClock();
 void printMIDI(byte type, byte data1, byte data2, byte channel);
 
+
+#define BUFFER_SIZE 4 // Define the size of the buffer
+volatile unsigned long bpm_buffer[BUFFER_SIZE]; // Array to hold last durations
+volatile int buffer_index = 0; // Index to keep track of the next value to update in the buffer
+
 void setup() {
+
+  unsigned long initial_micros_per_beat = 2500000; // Placeholder for the average duration of a beat at 120 BPM
+  for(int i = 0; i < BUFFER_SIZE; i++) {
+    bpm_buffer[i] = initial_micros_per_beat;
+  }
+  
   Serial.begin(115200);
   MIDI1.begin(MIDI_CHANNEL_OMNI);
   pinMode(PO_BUTTON_1, OUTPUT);
@@ -328,6 +339,16 @@ void sendToComputer(byte type, byte data1, byte data2, byte channel, const uint8
   }
 }
 
+// Function to average values in the buffer
+unsigned long averageBuffer(unsigned long buffer[], int size){
+    unsigned long sum = 0;
+    for(int i = 0; i < size; i++) {
+        sum += buffer[i];
+    }
+    return sum / size;
+}
+
+
 void processMidiClock(){
   if(bpm_counter == 0){
     curr_midi_clock_time = micros();
@@ -336,11 +357,24 @@ void processMidiClock(){
     prev_midi_clock_time = curr_midi_clock_time;
     curr_midi_clock_time = micros();
     bpm_counter = 0;
-    int bpm = 60000 / (( curr_midi_clock_time - prev_midi_clock_time ) / 1000);
-    clk->setBPM(bpm);
+    
+    // Calculate the duration for one beat
+    unsigned long micros_per_beat = curr_midi_clock_time - prev_midi_clock_time;
+
+    // Store the latest duration in the buffer and increment the index
+    bpm_buffer[buffer_index] = micros_per_beat;
+    buffer_index = (buffer_index + 1) % BUFFER_SIZE; // Wrap the index around if it reaches the buffer size
+
+    // Average the buffer values
+    unsigned long average_micros_per_beat = averageBuffer(bpm_buffer, BUFFER_SIZE);
+    
+    float bpm_float = 60000000.0 / average_micros_per_beat;
+//    Serial.println(static_cast<int>(bpm_float + 0.5)); // Uncomment if you want to debug
+    clk->setBPM(static_cast<int>(bpm_float + 0.5));
   }
   bpm_counter++;
 }
+
 
 void processMidi(uint8_t type,uint8_t channel , uint8_t data1, uint8_t data2,const uint8_t *sys, bool isSendToComputer, bool isSendToUSBHost){
   po_control->execute(type, channel, data1, data2, clk->getBpm());
