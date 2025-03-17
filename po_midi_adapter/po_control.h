@@ -67,7 +67,9 @@ class PO_Control{
       unsigned long _prev_midi_clock_time = 0;
       volatile unsigned long _curr_midi_clock_time = 0;
       int _esp32_enabled = 1;
-      
+      bool _is_effect_on = false;
+      bool _is_pitch_bend_on = false;
+      bool _is_pitch_bend_reset = true;
 
       Storage *_config;
 

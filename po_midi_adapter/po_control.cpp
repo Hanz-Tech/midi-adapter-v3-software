@@ -313,6 +313,57 @@ void PO_Control::execute(uint8_t type, uint8_t channel, uint8_t data1, uint8_t d
       } else{
         if (!_is_recording)
           this->releasePONoteButton(data1);
+        if(_is_effect_on){
+          digitalWriteFast(PO_BUTTON_FX, HIGH);
+          delay(15);
+          digitalWriteFast(PO_BUTTON_5, HIGH);
+          _is_effect_on = false;
+        }
+      }
+    } 
+      else if (type == 0xE0 ){ // Pitchbend channel 1  HACK to trigger PO28 effect
+        if( data2 >= 50 && data2 <= 80 ){
+          _is_pitch_bend_reset = true;
+        }
+        if (data2 >= 100 && !_is_pitch_bend_on) {
+          digitalWriteFast(PO_BUTTON_SPECIAL, LOW);
+          delay(15);
+          _is_pitch_bend_on = true;
+        }
+        else if (data2 < 100 && data2 > 50 && _is_pitch_bend_on) {
+          digitalWriteFast(PO_BUTTON_SPECIAL, HIGH);
+          delay(15);
+          _is_pitch_bend_on = false;
+          
+        }
+        if (data2 < 20  && !_is_effect_on && _is_pitch_bend_reset) {
+          digitalWriteFast(PO_BUTTON_FX, LOW);
+          delay(15);
+          digitalWriteFast(PO_BUTTON_8, LOW);
+          _is_effect_on = true;
+          _is_pitch_bend_reset = false;
+          delay(100);
+          digitalWriteFast(PO_BUTTON_FX, HIGH);
+          delay(15);
+          digitalWriteFast(PO_BUTTON_8, HIGH);          
+          /*
+          1. distorted filter
+          2. distorted sweep
+          5. lowpass slow filter
+          6. lowpass fast sweep 
+          7. hipass filter
+          8. hipass sweep
+          */
+          Serial.println("efft on");
+        }
+        else if (data2 < 20  && _is_effect_on && _is_pitch_bend_reset) {
+          digitalWriteFast(PO_BUTTON_FX, LOW);
+          delay(100);
+          digitalWriteFast(PO_BUTTON_FX, HIGH);
+          _is_effect_on = false;
+          _is_pitch_bend_reset = false;
+          Serial.println("effet off");
+        }
       }
     } else if (type == midi::ControlChange && this->get_po_cc_control()){
       if(data1 == _midi_cc_knob[9]){ //mode
@@ -369,7 +420,6 @@ void PO_Control::execute(uint8_t type, uint8_t channel, uint8_t data1, uint8_t d
       }
     }
   }
-}
 
 void PO_Control::checkForConfigUpdate(){
   if(_config->checkforUpdate()){

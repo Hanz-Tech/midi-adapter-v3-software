@@ -51,7 +51,7 @@ void Clock::start(){
 void Clock::setBPM(int newBpm) {
   _bpm = newBpm;
   if(newBpm >= MIN_BPM && newBpm <= MAX_BPM){
-    _pulseDuration = getBPMOrPulseLength(_bpm);
+    _pulseDuration = getBPMOrPulseLength(_bpm) / 2;
   }
 }
 
